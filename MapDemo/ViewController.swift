@@ -26,11 +26,28 @@ class ViewController: UIViewController, MKMapViewDelegate {
         let region = MKCoordinateRegion(center: coordinates, span: span)
         
         mapView.setRegion(region, animated: true)
+        
+        // Adding annotation to map
+        let annotation = MKPointAnnotation()
+        annotation.title = "YIIT"
+        annotation.subtitle = "We work here!"
+        annotation.coordinate = coordinates
+        mapView.addAnnotation(annotation)
+        
+        // Adding user annotation with longpress
+        let longPressRecog = UILongPressGestureRecognizer(target: self, action: #selector(self.longPress(gestureRecognizer:)))
+        longPressRecog.minimumPressDuration = 2
+        mapView.addGestureRecognizer(longPressRecog)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @objc func longPress(gestureRecognizer: UIGestureRecognizer) {
+        let touchPoint = gestureRecognizer.location(in: self.mapView)
+        let coordinate = mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        annotation.title = "Your Place"
+        annotation.subtitle = "You like to go here!"
+        mapView.addAnnotation(annotation)
     }
 
 
